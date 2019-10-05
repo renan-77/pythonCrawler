@@ -29,11 +29,14 @@ okButton = driver.find_element_by_xpath("//button[@class='privacy-basic-button p
 
 print(okButton.text)
 
+#Clicks the ok button for confirming cookies.
 okButton.click()
 
+#Creating array with the text found in the page (currencies).
 eurCurrencies = [driver.find_element_by_xpath('//*[@id="ratesTable"]/div/section/table/tbody/tr[2]/td[1]/a').text, 
 driver.find_element_by_xpath('//*[@id="ratesTable"]/div/section/table/tbody/tr[2]/td[2]/a').text,
 driver.find_element_by_xpath('//*[@id="ratesTable"]/div/section/table/tbody/tr[2]/td[3]/a').text, 
 driver.find_element_by_xpath('//*[@id="ratesTable"]/div/section/table/tbody/tr[2]/td[4]/a').text] 
 
+#Printing the currencies with the array values..
 print('1 EURO = USD: ' ,eurCurrencies[1],'$ GPB: ' , eurCurrencies[2],'£ CAD: ' , eurCurrencies[3] ,'$.')
