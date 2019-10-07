@@ -61,8 +61,11 @@ collection.insert_one({"currency" : "USD", "currentValue" : eurCurrencies[0] , "
 collection.insert_one({"currency" : "GPB", "currentValue" : eurCurrencies[1] , "when" : str(now)})
 collection.insert_one({"currency" : "CAD", "currentValue" : eurCurrencies[2] , "when" : str(now)})
 
+#Type of currency to display.
+whichCurrency = "USA"
+
 #Creating range of find to print the documents in the range.
-cur = collection.find({"currency": "USD"}, {"_id" : 0, "currency" : 1 ,"currentValue" : 1, "when" : 1})
+cur = collection.find({"currency": whichCurrency}, {"_id" : 0, "currency" : 1 ,"currentValue" : 1, "when" : 1})
 
 #Printing each document in the range.
 for currentCurrency in cur:
