@@ -54,9 +54,19 @@ driver.find_element_by_xpath('//*[@id="ratesTable"]/div/section/table/tbody/tr[2
 driver.find_element_by_xpath('//*[@id="ratesTable"]/div/section/table/tbody/tr[2]/td[4]/a').text] 
 
 #Printing the currencies with the array values..
-print('1 EURO = USD: ' ,eurCurrencies[0],'$ GPB: ' , eurCurrencies[1],'£ CAD: ' , eurCurrencies[2] ,'$.')
+print('1 EURO = USD: ' ,eurCurrencies[0],'$ GPB: ' , eurCurrencies[1],'£ CAD: ' , eurCurrencies[2] ,'$.', 'Query time:', str(now))
 
 #Inserting the currencies to the database.
 collection.insert_one({"currency" : "USD", "currentValue" : eurCurrencies[0] , "when" : str(now)})
 collection.insert_one({"currency" : "GPB", "currentValue" : eurCurrencies[1] , "when" : str(now)})
 collection.insert_one({"currency" : "CAD", "currentValue" : eurCurrencies[2] , "when" : str(now)})
+
+#Creating range of find to print the documents in the range.
+cur = collection.find({"currency": "USD"}, {"_id" : 0, "currency" : 1 ,"currentValue" : 1, "when" : 1})
+
+#Printing each document in the range.
+for currentCurrency in cur:
+    print(currentCurrency)
+
+#Closing browser after operation is finished.
+driver.quit()
