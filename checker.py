@@ -12,9 +12,9 @@ import time
 #Creating mongodb connection.
 try:
     conn = MongoClient('localhost',27017)
-    print("Successfully Connected")
+    print("Successfully Connected to database")
 except:
-    print("Connection error, please check data")
+    print("Database connection error, please check data")
 db = conn.currencyChecker
 collection = db.currencies
 
@@ -26,7 +26,7 @@ options.add_argument("--window-size=1440x900")
 #Setting a driver variable for the chrome webdriver.
 driver = webdriver.Chrome(options=options, executable_path='/Users/renan/Dropbox/Working/python/currencyChecker/chromedriver')
 
-#Setting url for the crawler
+#Setting url for the crawler.
 url = "https://www.xe.com/"
 
 #Specifying the url to be accessed using the driver function.
@@ -54,7 +54,7 @@ driver.find_element_by_xpath('//*[@id="ratesTable"]/div/section/table/tbody/tr[2
 driver.find_element_by_xpath('//*[@id="ratesTable"]/div/section/table/tbody/tr[2]/td[4]/a').text] 
 
 #Printing the currencies with the array values..
-print('1 EURO = USD: ' ,eurCurrencies[0],'$ GPB: ' , eurCurrencies[1],'£ CAD: ' , eurCurrencies[2] ,'$.', 'Query time:', str(now))
+print('CURRENT CURRENCY: 1 EURO = USD: ' ,eurCurrencies[0],'$ GPB: ' , eurCurrencies[1],'£ CAD: ' , eurCurrencies[2] ,'$.', 'Query time:', str(now))
 
 #Inserting the currencies to the database.
 collection.insert_one({"currency" : "USD", "currentValue" : eurCurrencies[0] , "when" : str(now)})
@@ -62,14 +62,26 @@ collection.insert_one({"currency" : "GPB", "currentValue" : eurCurrencies[1] , "
 collection.insert_one({"currency" : "CAD", "currentValue" : eurCurrencies[2] , "when" : str(now)})
 
 #Type of currency to display.
-whichCurrency = "USA"
+whichCurrency = "USD"
 
 #Creating range of find to print the documents in the range.
 cur = collection.find({"currency": whichCurrency}, {"_id" : 0, "currency" : 1 ,"currentValue" : 1, "when" : 1})
 
-#Printing each document in the range.
+#Checking the count of existing registers on currency for naming files.
+currencyRegisterCount = "{0}{1}".format(whichCurrency, collection.count_documents({"currency" : whichCurrency}))
+
+#Creating text file to output.
+if(collection.count_documents({"currency" : whichCurrency}) != 0):
+    File_object = open("currencies%s.txt" % currencyRegisterCount,"w+")
+else:
+    print("Data check fail.")
+
+#For loop to get every document in the cursor.
 for currentCurrency in cur:
-    print(currentCurrency)
+    #print(currentCurrency)
+    
+    #Outputing the result to the created text file.
+    File_object.write("%s\n" % currentCurrency)
 
 #Closing browser after operation is finished.
 driver.quit()
