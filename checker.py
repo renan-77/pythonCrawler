@@ -26,6 +26,19 @@ def databaseConnection(ip,port):
     #Evoking the insert on database method.
     databaseInsert(collection)
 
+#Function to insert the data onto the database.
+def databaseInsert(db_collection):
+    #Assigning a dataset variable to the returned array from seleniumDriver function.
+    dataset = seleniumDriver('https://www.xe.com/', '/Users/renan/Dropbox/Working/python/currencyChecker/chromedriver')
+
+    #Inserting the currencies to the database.
+    db_collection.insert_one({"currency" : "USD", "currentValue" : dataset[0] , "when" : str(now)})
+    db_collection.insert_one({"currency" : "GPB", "currentValue" : dataset[1] , "when" : str(now)})
+    db_collection.insert_one({"currency" : "CAD", "currentValue" : dataset[2] , "when" : str(now)})
+
+    #Evoking databaseFind method with the collection as argument.
+    databaseFind(db_collection)
+
 def seleniumDriver(url, driverPath):
     #Setting the options for chrome.
     options = Options()
@@ -62,23 +75,10 @@ def seleniumDriver(url, driverPath):
     #Returning the euCurrencies array.
     return eurCurrencies
 
-#Function to insert the data onto the database.
-def databaseInsert(db_collection):
-    #Assigning a dataset variable to the returned array from seleniumDriver function.
-    dataset = seleniumDriver('https://www.xe.com/', '/Users/renan/Dropbox/Working/python/currencyChecker/chromedriver')
-
-    #Inserting the currencies to the database.
-    db_collection.insert_one({"currency" : "USD", "currentValue" : dataset[0] , "when" : str(now)})
-    db_collection.insert_one({"currency" : "GPB", "currentValue" : dataset[1] , "when" : str(now)})
-    db_collection.insert_one({"currency" : "CAD", "currentValue" : dataset[2] , "when" : str(now)})
-
-    #Evoking databaseFind method with the collection as argument.
-    databaseFind(db_collection)
-
 #Function to retrive the data from the database and add to a file.
 def databaseFind(db_collection):
     #Type of currency to display.
-    whichCurrency = "USD"
+    whichCurrency = "GPB"
 
     #Creating range of find to print the documents in the range.
     cur = db_collection.find({"currency": whichCurrency}, {"_id" : 0, "currency" : 1 ,"currentValue" : 1, "when" : 1})
