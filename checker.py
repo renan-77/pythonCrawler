@@ -9,6 +9,9 @@ from selenium.webdriver.chrome.options import Options
 #Importing time to use the sleep function.
 import time
 
+#Type of currency to display.
+whichCurrency = "GBP"
+
 #Creating global time now variable.
 now = datetime.datetime.now()
 
@@ -33,7 +36,7 @@ def databaseInsert(db_collection):
 
     #Inserting the currencies to the database.
     db_collection.insert_one({"currency" : "USD", "currentValue" : dataset[0] , "when" : str(now)})
-    db_collection.insert_one({"currency" : "GPB", "currentValue" : dataset[1] , "when" : str(now)})
+    db_collection.insert_one({"currency" : "GBP", "currentValue" : dataset[1] , "when" : str(now)})
     db_collection.insert_one({"currency" : "CAD", "currentValue" : dataset[2] , "when" : str(now)})
 
     #Evoking databaseFind method with the collection as argument.
@@ -77,9 +80,6 @@ def seleniumDriver(url, driverPath):
 
 #Function to retrive the data from the database and add to a file.
 def databaseFind(db_collection):
-    #Type of currency to display.
-    whichCurrency = "GPB"
-
     #Creating range of find to print the documents in the range.
     cur = db_collection.find({"currency": whichCurrency}, {"_id" : 0, "currency" : 1 ,"currentValue" : 1, "when" : 1})
 
